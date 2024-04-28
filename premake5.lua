@@ -20,6 +20,7 @@ workspace "comp-SCI-algorithms and data structures"
   group "algorithms"
   include "QuickSort"
   include "StrassenMatrixMultiplication"
+  include "Prod-RecursiveIntegerMultiplication"
 group ""
 
 group "structures"
