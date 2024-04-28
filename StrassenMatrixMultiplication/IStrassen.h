@@ -1,121 +1,110 @@
 ﻿#include <iostream>
-#include <vector>
+#include "Auxiliary.hpp"
 
-using namespace std;
 
-// Function to add two matrices
-vector<vector<int>> addMatrix(const vector<vector<int>>& A, const vector<vector<int>>& B) {
-    int n = A.size();
-    vector<vector<int>> result(n, vector<int>(n, 0));
+// Aliases
+using type = int;
+using Matrix = type * *;
+using size = std::size_t;
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            result[i][j] = A[i][j] + B[i][j];
-        }
-    }
+// Linear Matrix Multiplication
+Matrix sq_matrix_multiply(Matrix A, Matrix B, size N) {
 
-    return result;
+	Matrix C = createMatrix(N);
+
+	type sum = 0;									// O(1)
+
+	for (unsigned int i = 0; i < N; i++) {						// O(n^3)
+		for (unsigned int j = 0; j < N; j++) {
+			for (size k = 0; k < N; k++) {
+				sum += A[i][k] * B[k][j];				// O(1)
+			}
+			C[i][j] = sum;							// O(1)
+			sum = 0;							// O(1)
+		}
+	}
+	return C;
 }
 
-// Function to subtract two matrices
-vector<vector<int>> subtractMatrix(const vector<vector<int>>& A, const vector<vector<int>>& B) {
-    int n = A.size();
-    vector<vector<int>> result(n, vector<int>(n, 0));
 
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            result[i][j] = A[i][j] - B[i][j];
-        }
-    }
+// Strassen's Algorithm
+Matrix strassen(Matrix A, Matrix B, size N) {
 
-    return result;
-}
+	// Base case
+	if (N == 1) {
+		return sq_matrix_multiply(A, B, N);
+	}
 
-// Function to perform Strassen matrix multiplication
-vector<vector<int>> strassenMatrixMultiplication(const vector<vector<int>>& A, const vector<vector<int>>& B) {
-    int n = A.size();
+	// Create a new matrix to hold the result
+	Matrix C = createMatrix(N);
 
-    // Base case: when matrix size is 1x1
-    if (n == 1) {
-        vector<vector<int>> C(1, vector<int>(1, 0));
-        C[0][0] = A[0][0] * B[0][0];
-        return C;
-    }
+	size K = N / 2;
 
-    // Divide matrices into submatrices
-    int halfSize = n / 2;
-    vector<vector<int>> A11(halfSize, vector<int>(halfSize));
-    vector<vector<int>> A12(halfSize, vector<int>(halfSize));
-    vector<vector<int>> A21(halfSize, vector<int>(halfSize));
-    vector<vector<int>> A22(halfSize, vector<int>(halfSize));
+	// New sub-matrices
+	Matrix A11 = createMatrix(K);
+	Matrix A12 = createMatrix(K);
+	Matrix A21 = createMatrix(K);
+	Matrix A22 = createMatrix(K);
+	Matrix B11 = createMatrix(K);
+	Matrix B12 = createMatrix(K);
+	Matrix B21 = createMatrix(K);
+	Matrix B22 = createMatrix(K);
 
-    vector<vector<int>> B11(halfSize, vector<int>(halfSize));
-    vector<vector<int>> B12(halfSize, vector<int>(halfSize));
-    vector<vector<int>> B21(halfSize, vector<int>(halfSize));
-    vector<vector<int>> B22(halfSize, vector<int>(halfSize));
 
-    for (int i = 0; i < halfSize; ++i) {
-        for (int j = 0; j < halfSize; ++j) {
-            A11[i][j] = A[i][j];
-            A12[i][j] = A[i][j + halfSize];
-            A21[i][j] = A[i + halfSize][j];
-            A22[i][j] = A[i + halfSize][j + halfSize];
+	// Populate the values accordingly
+	for (unsigned int i = 0; i < K; i++) {
+		for (unsigned j = 0; j < K; j++) {
+			A11[i][j] = A[i][j];
+			A12[i][j] = A[i][K + j];		// Bug solved: I had a type: A22 instead of A12
+			A21[i][j] = A[K + i][j];
+			A22[i][j] = A[K + i][K + j];
+			B11[i][j] = B[i][j];
+			B12[i][j] = B[i][K + j];		// Bug solved: I had a type: B22 instead of B12
+			B21[i][j] = B[K + i][j];
+			B22[i][j] = B[K + i][K + j];
+		}
+	}
 
-            B11[i][j] = B[i][j];
-            B12[i][j] = B[i][j + halfSize];
-            B21[i][j] = B[i + halfSize][j];
-            B22[i][j] = B[i + halfSize][j + halfSize];
-        }
-    }
+	// S
+	Matrix S1 = subtract(B12, B22, K);
+	Matrix S2 = add(A11, A12, K);
+	Matrix S3 = add(A21, A22, K);
+	Matrix S4 = subtract(B21, B11, K);
+	Matrix S5 = add(A11, A22, K);
+	Matrix S6 = add(B11, B22, K);
+	Matrix S7 = subtract(A12, A22, K);
+	Matrix S8 = add(B21, B22, K);
+	Matrix S9 = subtract(A11, A21, K);
+	Matrix S10 = add(B11, B12, K);
 
-    // Recursive calls for the submatrices
-    vector<vector<int>> P1 = strassenMatrixMultiplication(A11, subtractMatrix(B12, B22));
-    vector<vector<int>> P2 = strassenMatrixMultiplication(addMatrix(A11, A12), B22);
-    vector<vector<int>> P3 = strassenMatrixMultiplication(addMatrix(A21, A22), B11);
-    vector<vector<int>> P4 = strassenMatrixMultiplication(A22, subtractMatrix(B21, B11));
-    vector<vector<int>> P5 = strassenMatrixMultiplication(addMatrix(A11, A22), addMatrix(B11, B22));
-    vector<vector<int>> P6 = strassenMatrixMultiplication(subtractMatrix(A12, A22), addMatrix(B21, B22));
-    vector<vector<int>> P7 = strassenMatrixMultiplication(subtractMatrix(A11, A21), addMatrix(B11, B12));
+	// P
+	Matrix P1 = strassen(A11, S1, K);
+	Matrix P2 = strassen(S2, B22, K);
+	Matrix P3 = strassen(S3, B11, K);
+	Matrix P4 = strassen(A22, S4, K);
+	Matrix P5 = strassen(S5, S6, K);
+	Matrix P6 = strassen(S7, S8, K);
+	Matrix P7 = strassen(S9, S10, K);
 
-    // Calculate the resulting submatrices
-    vector<vector<int>> C11 = addMatrix(subtractMatrix(addMatrix(P5, P4), P2), P6);
-    vector<vector<int>> C12 = addMatrix(P1, P2);
-    vector<vector<int>> C21 = addMatrix(P3, P4);
-    vector<vector<int>> C22 = subtractMatrix(subtractMatrix(addMatrix(P5, P1), P3), P7);
+	Matrix C11 = subtract(add(add(P5, P4, K), P6, K), P2, K);				// P5 + P4 - P2 + P6
+	Matrix C12 = add(P1, P2, K);								// P1 + P2
+	Matrix C21 = add(P3, P4, K);								// P3 + P4
+	Matrix C22 = subtract(subtract(add(P5, P1, K), P3, K), P7, K);				// P1 + P5 - P3 - P7
 
-    // Combine the resulting submatrices
-    vector<vector<int>> C(n, vector<int>(n));
-    for (int i = 0; i < halfSize; ++i) {
-        for (int j = 0; j < halfSize; ++j) {
-            C[i][j] = C11[i][j];
-            C[i][j + halfSize] = C12[i][j];
-            C[i + halfSize][j] = C21[i][j];
-            C[i + halfSize][j + halfSize] = C22[i][j];
-        }
-    }
+																				// C
+	for (unsigned int i = 0; i < K; i++) {
+		for (unsigned int j = 0; j < K; j++) {
 
-    return C;
-}
+			C[i][j] = C11[i][j];
 
-// Function to print a matrix
-void printMatrix(const vector<vector<int>>& matrix) {
-    for (const auto& row : matrix) {
-        for (int val : row) {
-            cout << val << " ";
-        }
-        cout << endl;
-    }
-}
+			C[i][j + K] = C12[i][j];
 
-// Function to input a matrix
-vector<vector<int>> inputMatrix(int n) {
-    vector<vector<int>> matrix(n, vector<int>(n));
-    cout << "Enter elements of matrix (" << n << "x" << n << "):" << endl;
-    for (int i = 0; i < n; ++i) {
-        for (int j = 0; j < n; ++j) {
-            cin >> matrix[i][j];
-        }
-    }
-    return matrix;
-    
+			C[K + i][j] = C21[i][j];
+
+			C[K + i][K + j] = C22[i][j];
+		}
+	}
+
+	// Return the result
+	return C;
 }
