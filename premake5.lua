@@ -19,6 +19,7 @@ workspace "comp-SCI-algorithms and data structures"
 
   group "algorithms"
   include "QuickSort"
+  include "StrassenMatrixMultiplication"
 group ""
 
 group "structures"

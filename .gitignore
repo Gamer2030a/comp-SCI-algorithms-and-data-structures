@@ -8,3 +8,6 @@
 *.user
 *.ini
 *.json
+*.vcxproj
+*.vcxproj.User
+*.vcxproj.user
