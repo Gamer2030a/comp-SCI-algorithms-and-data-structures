@@ -9,11 +9,10 @@ objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
    files 
 {
-  "src/**.h",
-  "src/**.hpp",
-	"src/**.cpp",
+  "**.h",
+  "**.hpp",
+	"**.cpp",
 }
-
 
 includedirs
 {
