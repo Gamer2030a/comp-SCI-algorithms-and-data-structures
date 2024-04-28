@@ -2,6 +2,11 @@
 #include <chrono>
 #include <random>
 
+// Aliases
+using type = int;
+using Matrix = type * *;
+using size = std::size_t;
+
 // Randomize matrix function
 void randomize(Matrix &A, size N) {	// O(n^2)
 	std::uniform_int<int> dist(1, 5);
@@ -60,10 +65,7 @@ Matrix subtract(Matrix A, Matrix B, size N) {
 	return C;
 }
 
-// Aliases
-using type = int;
-using Matrix = type * *;
-using size = std::size_t;
+
 
 // Linear Matrix Multiplication
 Matrix sq_matrix_multiply(Matrix A, Matrix B, size N) {

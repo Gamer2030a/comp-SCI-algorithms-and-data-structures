@@ -23,7 +23,7 @@ int main()
     //Call the Strassen function
     Matrix C = strassen(A, B, N);
 
-    cout << "Result of matrix multiplication:" << endl;
-    printMatrix(C, N);
+    std::cout << "Result of matrix multiplication:" << std::endl;
+    print(C, N);
     return 0;
 }
