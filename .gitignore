@@ -11,3 +11,4 @@
 *.vcxproj
 *.vcxproj.User
 *.vcxproj.user
+*.bin*

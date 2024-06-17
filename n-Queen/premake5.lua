@@ -1,5 +1,5 @@
-project "StrassenMatrixMultiplication"
-kind "StaticLib"
+project "n-Queen"
+kind "staticLib"
 language "C++"
 cppdialect "C++20"
 staticruntime "off"

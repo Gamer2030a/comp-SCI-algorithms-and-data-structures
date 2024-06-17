@@ -1,5 +1,5 @@
 project "Prod-RecursiveIntegerMultiplication"
-kind "ConsoleApp"
+kind "staticLib"
 language "C++"
 cppdialect "C++20"
 staticruntime "off"

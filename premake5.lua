@@ -2,7 +2,7 @@ require('vstudio')
 
 workspace "comp-SCI-algorithms and data structures"
   architecture "x64"
-  startproject "QuickSort"
+  startproject "ConsoleProject"
 
     configurations
   {
@@ -17,12 +17,17 @@ workspace "comp-SCI-algorithms and data structures"
   
   outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-  group "algorithms"
-  include "QuickSort"
-  include "StrassenMatrixMultiplication"
-  include "Prod-RecursiveIntegerMultiplication"
-group ""
+  group "Console Project"
+  include "ConsoleProject"
 
-group "structures"
+  group "algorithm Libraries"
+  include "QuickSort"
+  include "StrassenMatrixMultiplication" 
+  include "Prod-RecursiveIntegerMultiplication"
+  include "n-Queen"
+  include "BackTracking"
+
+
+group "structure Libraries"
 
 group ""

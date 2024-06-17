@@ -1,5 +1,5 @@
-project "StrassenMatrixMultiplication"
-kind "StaticLib"
+project "BackTracking"
+kind "staticLib"
 language "C++"
 cppdialect "C++20"
 staticruntime "off"
@@ -9,9 +9,9 @@ objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
 
    files 
 {
-  "**.h",
-  "**.hpp",
-	"**.cpp",
+  "Include/**.h",
+  "Include/**.hpp",
+	"Include/**.cpp",
 }
 
 includedirs

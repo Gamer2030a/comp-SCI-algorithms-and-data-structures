@@ -3,6 +3,7 @@
 
 //calculate the product of two integers
 int prod(int u, int v) {
+#undef max
     int n = std::max((int)(log10(u) + 1), (int)(log10(v) + 1));
     int m, x, y, w, z;
 
