@@ -12,7 +12,7 @@ void ChangeText();
 int SelectedAlgorithm = 1;
 
 // Function to set console text color
-void SetConsoleColor(WORD color)
+static void SetConsoleColor(WORD color)
 {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, color);
@@ -54,7 +54,7 @@ void ChangeText()
 }
 
 
-	void QuickSort()
+static void QuickSort()
 	{
 		//Quick Sort
 		int n;
@@ -70,7 +70,7 @@ void ChangeText()
 		printArray(arr);
 	}
 
-	void NQueen()
+static void NQueen()
 	{
 		int N, numQueens;
 		std::cout << "Enter the size of the board (N): ";
@@ -90,7 +90,7 @@ void ChangeText()
 		SolveNQueens(board, numQueens);
 	}
 
-	void ProdRecursive()
+static void ProdRecursive()
 	{
 		int x, y;
 		std::cout << "Enter x : ";
@@ -100,7 +100,7 @@ void ChangeText()
 		std::cout << "Answer : " << prod(x, y) << std::endl;
 	}
 
-	void Strassen()
+	static void Strassen()
 	{
 		size N = 4;
 
